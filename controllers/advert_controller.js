@@ -1,5 +1,5 @@
 import { AdvertModel } from '../models/advert_model.js';
-import { addAdsValidator, updateAdsValidator, deleteAdsValidator } from '../validators/advert_validator.js';
+import { addAdsValidator, updateAdsValidator } from '../validators/advert_validator.js';
 
 
 export const addAdvert = async (req, res, next) => {
@@ -24,6 +24,18 @@ export const addAdvert = async (req, res, next) => {
         next(error);
     }
 };
+
+export const countAdverts = async (req, res, next) => {
+    try {
+        const { filter = "{}" } =req.query;
+        //count todos in database
+        const count = await AdvertModel.countDocuments(JSON.parse(filter));
+        //Responto request
+        res.json({ count });
+    } catch (error) {
+        next(error);
+    }
+}
 
 export const getAdvertById = async (req, res, next) => {
     try {

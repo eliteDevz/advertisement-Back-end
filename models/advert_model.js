@@ -1,4 +1,5 @@
-import { required } from "joi";
+import Joi from "joi";
+import { toJSON } from "@reis/mongoose-to-json";
 import { Schema, model, Types } from "mongoose";
 
 const advertSchema = new Schema({
