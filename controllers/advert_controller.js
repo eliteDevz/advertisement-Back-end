@@ -19,7 +19,7 @@ export const addAdvert = async (req, res, next) => {
             user: req.auth.id
         });
         //Respond to request
-        res.status(201).json('Ads was added');
+        return res.status(201).json('Ads was added');
     } catch (error) {
         next(error);
     }
@@ -77,7 +77,7 @@ export const updateAdvert = async (req, res, next) => {
         // Write vendor Ads to database
         const advert = await AdvertModel.findOneAndUpdate(
             {
-                id: req.params.id,
+                _id: req.params.id,
                 user: req.auth.id
             },
             value,
