@@ -26,3 +26,27 @@ const upload = multer({
     // .single('image'),
     preservePath: true
 });
+
+// Set up storage engine
+export const carsIconUpload = multer({
+    storage: multerSaveFilesOrg({
+        apiAccessToken: process.env.SAVEFILESORG_API_KEY,
+        limits: { fileSize: 1000000 }, // Limit file size to 1MB
+        relativePath: '/vender-api/cars/*',
+    }),
+    preservePath: true
+});
+
+// Initialize upload
+const cars = multer({
+    storage: multerSaveFilesOrg({
+        apiAccessToken: process.env.SAVEFILESORG_AOI_KEY,
+        limits: { fileSize: 1000000 }, // Limit file size to 1MB
+        fileFilter: (req, file, cb) => {
+            checkFileType(file, cb);
+            relativePath: '/vendor/cars/*'
+        }
+    }),
+    // .single('image'),
+    preservePath: true
+});

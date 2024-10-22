@@ -1,3 +1,4 @@
+import { required } from "joi";
 import { Schema, model, Types } from "mongoose";
 
 const advertSchema = new Schema({
@@ -6,7 +7,12 @@ const advertSchema = new Schema({
     price: { type: Number, required: true },
     // imageUrl: { type: String, required: true },
     icon: { type: String, required: true },
-    createdAt: { type: Date, default: Date.now }
+    category: { type: String, required: true},
+    user: { type: Types.ObjectId, required: true, ref: 'User' }
+}, {
+    timestamps: true
 });
+
+advertSchema.plugin(toJSON)
 
 export const AdvertModel = model('Advert', advertSchema);

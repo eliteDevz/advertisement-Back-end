@@ -8,13 +8,16 @@ export const addAdvert = async (req, res, next) => {
         // Validate vender input
         const { error, value } = addAdsValidator.validate({
             ...req.body,
-            icon: req.file?.filename, description: req.body.description?.substring(0, 200) // Limit description to 200 characters
+            icon: req.file?.filename
         });
         if (error) {
             return res.status(422).json(error);
         }
         // Write vendor Ads to database
-        await AdvertModel.create(value);
+        await AdvertModel.create({
+            ...value,
+            user: req.auth.id
+        });
         //Respond to request
         res.status(201).json('Ads was added');
     } catch (error) {
@@ -38,7 +41,7 @@ export const getAdvertById = async (req, res, next) => {
 
 export const getAllAdvert = async (req, res, next) => {
     try {
-        const { filter = "{}", sort ="{}", limit = 10, skip = 0 } = req.query;
+        const { filter = "{}", sort = "{}", limit = 10, skip = 0 } = req.query;
         //Fetch Vendor Ads from database
         const ads = await VendorModel
             .find(JSON.parse(filter))
@@ -46,7 +49,7 @@ export const getAllAdvert = async (req, res, next) => {
             .limit(limit)
             .skip(skip);
         //Return response
-        res.status(200).json(vendor);
+        res.status(200).json(advert);
     } catch (error) {
         next(error);
     }
@@ -60,9 +63,19 @@ export const updateAdvert = async (req, res, next) => {
             return res.status(422).json(error);
         }
         // Write vendor Ads to database
-        const advert = await AdvertModel.findByIdAndUpdate(req.params.id, { new: true });
+        const advert = await AdvertModel.findOneAndUpdate(
+            {
+                id: req.params.id,
+                user: req.auth.id
+            },
+            value,
+            { new: true }
+        );
+        if (!advert) {
+            return res.status(404).json('Ad not found');
+        }
         //Respond to request
-        res.status(201).json(vendor);
+        res.status(201).json(advert);
     } catch (error) {
         next(error);
     }
@@ -70,14 +83,9 @@ export const updateAdvert = async (req, res, next) => {
 
 export const deleteAdvert = async (req, res, next) => {
     try {
-        // Validate the ID
-        const { error, value } = deleteAdsValidator.validate(req.params.id);
-        if (error) {
-            return res.status(422).json({ message: 'Invalid ID format' });
-            }
         //Delete the as by ID from the database
-        const ad = await AdvertModel.findByIdAndDelete(req.params.id);
-        if (!ad) {
+        const advert = await AdvertModel.findByIdAndDelete(req.params.id);
+        if (!advert) {
             return res.status(404).json('Ad not found');
         }
         //Respond to the request

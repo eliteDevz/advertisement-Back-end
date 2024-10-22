@@ -1,17 +1,18 @@
 import { Router } from "express";
-import { addAdvert, getAllAdvert, getAdvertById, updateAdvert, deleteAdvert } from "../controllers/advert_controller.js";
+import { addAdvert, getAllAdvert, getAdvertById, updateAdvert, countAdverts, deleteAdvert } from "../controllers/advert_controller.js";
 import { advertIconUpload } from "../middlewares/advert_upload.js";
+import { isAuthenticated } from "../middlewares/auth.js";
 
 export const advertRouter = Router();
 
-advertRouter.get('advert/count');
+advertRouter.get('/adverts/count', countAdverts);
 
-advertRouter.post('/advert', advertIconUpload.single('icon'), addAdvert);
+advertRouter.post('/adverts', isAuthenticated, advertIconUpload.single('icon'), addAdvert);
 
-advertRouter.get('/advert', getAllAdvert);
+advertRouter.get('/adverts', getAllAdvert);
 
-advertRouter.get('/advert/:id', getAdvertById);
+advertRouter.get('/adverts/:id', getAdvertById);
 
-advertRouter.patch('/advert/:id', advertIconUpload.single('icon'), updateAdvert);
+advertRouter.patch('/adverts/:id', isAuthenticated, advertIconUpload.single('icon'), updateAdvert);
 
-advertRouter.delete('/advert/:id', advertIconUpload.single('icon'), deleteAdvert);
+advertRouter.delete('/adverts/:id', isAuthenticated, deleteAdvert);
