@@ -31,7 +31,7 @@ export const countAdverts = async (req, res, next) => {
         //count todos in database
         const count = await AdvertModel.countDocuments(JSON.parse(filter));
         //Responto request
-        res.json({ count });
+        return res.json({ count });
     } catch (error) {
         next(error);
     }
@@ -45,7 +45,7 @@ export const getAdvertById = async (req, res, next) => {
             return res.status(404).json('Ad not found');
         }
         //Respond to the request
-        res.status(200).json(ads);
+        return res.status(200).json(ads);
     } catch (error) {
         next(error);
     }
@@ -61,7 +61,7 @@ export const getAllAdvert = async (req, res, next) => {
             .limit(limit)
             .skip(skip);
         //Return response
-        res.status(200).json(advert);
+        return res.status(200).json(advert);
     } catch (error) {
         next(error);
     }
@@ -87,7 +87,7 @@ export const updateAdvert = async (req, res, next) => {
             return res.status(404).json('Ad not found');
         }
         //Respond to request
-        res.status(201).json(advert);
+        return res.status(201).json(advert);
     } catch (error) {
         next(error);
     }
@@ -101,7 +101,7 @@ export const deleteAdvert = async (req, res, next) => {
             return res.status(404).json('Ad not found');
         }
         //Respond to the request
-        res.status(200).json('Ad Deleted successfully');
+        return res.status(200).json('Ad Deleted successfully');
     } catch (error) {
         next(error);
     }
