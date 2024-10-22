@@ -92,3 +92,12 @@ export const updatedProfile = (req,res,next) =>{
         next(error);
     }
 };
+
+// export const deleteUser = async (req, res, next) => {
+//     try {
+//         const user = await UserModel.findByIdAndDelete(req.params.id);
+//         res.status(204).json('User was deleted');
+//     } catch (error) {
+//         next(error);
+//     }
+// }
