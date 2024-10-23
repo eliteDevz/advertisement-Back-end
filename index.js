@@ -2,6 +2,7 @@ import express from "express";
 import mongoose from "mongoose";
 import userRouter from "./routes/user_routes.js";
 import { advertRouter } from "./routes/advert_route.js";
+import vendorRouter from "./routes/vendor_route.js";
 import cors from "cors";
 // import bodyParser from "body-parser";
 
@@ -18,6 +19,7 @@ app.use(express.json());
 app.use(cors());
 app.use(userRouter);
 app.use(advertRouter);
+app.use(vendorRouter);
 // app.use(bodyParser.json());
 
 
