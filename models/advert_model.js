@@ -9,7 +9,7 @@ const advertSchema = new Schema({
     // imageUrl: { type: String, required: true },
     icon: { type: String, required: true },
     category: { type: String, required: true},
-    user: { type: Types.ObjectId, required: true, ref: 'User' }
+    vendor: { type: Types.ObjectId, required: true, ref: 'Vendor' }
 }, {
     timestamps: true
 });

@@ -11,16 +11,17 @@ export const addAdvert = async (req, res, next) => {
             icon: req.file?.filename
         });
         if (error) {
-            return res.status(422).json(error);
+            return res.status(422).json('error');
         }
         // Write vendor Ads to database
-        await AdvertModel.create({
+        const advert = await AdvertModel.create({
             ...value,
             user: req.auth.id
         });
         //Respond to request
         return res.status(201).json('Ads was added');
     } catch (error) {
+        console.error('error adding advert', error);
         next(error);
     }
 };
@@ -40,12 +41,12 @@ export const countAdverts = async (req, res, next) => {
 export const getAdvertById = async (req, res, next) => {
     try {
         //Fetch the ad by ID from the database
-        const ads = await AdvertModel.findById(req.params.id);
+        const ad = await AdvertModel.findById(req.params.id);
         if (!ad) {
             return res.status(404).json('Ad not found');
         }
         //Respond to the request
-        return res.status(200).json(ads);
+        return res.status(200).json(ad);
     } catch (error) {
         next(error);
     }
@@ -55,13 +56,13 @@ export const getAllAdvert = async (req, res, next) => {
     try {
         const { filter = "{}", sort = "{}", limit = 10, skip = 0 } = req.query;
         //Fetch Vendor Ads from database
-        const ads = await VendorModel
+        const ads = await AdvertModel
             .find(JSON.parse(filter))
             .sort(JSON.parse(sort))
             .limit(limit)
             .skip(skip);
         //Return response
-        return res.status(200).json(advert);
+        return res.status(200).json(ads);
     } catch (error) {
         next(error);
     }
