@@ -28,7 +28,7 @@ export const addAdvert = async (req, res, next) => {
 
 export const countAdverts = async (req, res, next) => {
     try {
-        const { filter = "{}" } =req.query;
+        const { filter = "{}" } = req.query;
         //count todos in database
         const count = await AdvertModel.countDocuments(JSON.parse(filter));
         //Responto request

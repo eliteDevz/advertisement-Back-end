@@ -1,5 +1,4 @@
 import { Vendor } from '../models/vendor_model.js';
-import { validationResult } from 'express-validator';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { registerVendorValidator, loginVendorValidator, updateProfileValidator } from '../validators/vendor_validator.js';
@@ -26,21 +25,11 @@ export const registerVendor = async (req, res) => {
 
         await vendor.save();
 
-        const payload = {
-            vendor: {
-                id: vendor.id
-            }
-        };
+        res.json({
+            message:'User registered!'
+        });
 
-        jwt.sign(
-            payload,
-            process.env.JWT_SECRET,
-            { expiresIn: '2 days' },
-            (err, token) => {
-                if (err) throw err;
-                res.json({ token });
-            }
-        );
+       
     } catch (err) {
         console.error(err.message);
         res.status(500).send('Server error');
@@ -53,10 +42,9 @@ export const loginVendor = async (req, res) => {
         return res.status(422).json({ errors: error.details });
     }
 
-    const { email, password } = value;
 
     try {
-        let vendor = await Vendor.findOne({ email });
+        let vendor = await Vendor.findOne({ email: value.email });
 
         if (!vendor) {
             return res.status(404).json({ msg: "Vendor does not exist" });
@@ -70,7 +58,7 @@ export const loginVendor = async (req, res) => {
 
         const token = jwt.sign(
             { id: vendor.id },
-            process.env.JWT_SECRET,
+            process.env.JWT_SECRET_KEY,
             { expiresIn: '24h' }
         );
 
@@ -93,6 +81,23 @@ export const getProfile = async (req, res) => {
         res.status(500).send('Server error');
     }
 };
+
+
+export const getAllVendors = async (req, res, next) => {
+    try {
+        const { filter = "{}", limit = 10, skip = 0 } = req.query;
+        // fetch todos from the database
+        const todos = await Vendor
+        .find(JSON.parse(filter))
+        .limit(limit)
+        .skip(skip);
+        // return response
+        res.status(200).json(todos);
+    } catch (error) {
+        next(error);
+    }
+}
+
 
 export const updateProfile = async (req, res) => {
     const { error, value } = updateProfileValidator.validate({
