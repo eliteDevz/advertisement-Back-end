@@ -18,7 +18,7 @@ export const registerVendorValidator = Joi.object({
         'string.email': 'Email must be a valid email',
         'any.required': 'Email is a required field'
     }),
-    phone: Joi.string().required().messages({
+    phone: Joi.string().messages({
         'string.base': 'Phone should be a type of text'
     }),
     location: Joi.string().required().messages({
