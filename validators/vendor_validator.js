@@ -2,7 +2,12 @@ import Joi from 'joi';
 
 
 export const registerVendorValidator = Joi.object({
-    name: Joi.string().required().messages({
+    firstName: Joi.string().required().messages({
+        'string.base': 'First name should be a type of text',
+        'string.empty': 'First name cannot be an empty field',
+        'any.required': 'First name is a required field'
+    }),
+    lastName: Joi.string().required().messages({
         'string.base': 'Last name should be a type of text',
         'string.empty': 'Last name cannot be an empty field',
         'any.required': 'Last name is a required field'
@@ -48,7 +53,10 @@ export const loginVendorValidator = Joi.object({
 
 
 export const updateProfileValidator = Joi.object({
-    name: Joi.string().messages({
+    firstName: Joi.string().messages({
+        'string.base': 'First name should be a type of text'
+    }),
+    lastName: Joi.string().messages({
         'string.base': 'Last name should be a type of text'
     }),
     phone: Joi.string().messages({

@@ -7,12 +7,12 @@ export const advertRouter = Router();
 
 advertRouter.get('/adverts/count', countAdverts);
 
-advertRouter.post('/adverts', isAuthenticated, advertIconUpload.single('icon'), addAdvert);
+advertRouter.post('/adverts', isAuthenticated, advertIconUpload.single('image'), addAdvert);
 
 advertRouter.get('/adverts', getAllAdvert);
 
 advertRouter.get('/adverts/:id', getAdvertById);
 
-advertRouter.patch('/adverts/:id', isAuthenticated, advertIconUpload.single('icon'), updateAdvert);
+advertRouter.patch('/adverts/:id', isAuthenticated, advertIconUpload.single('image'), updateAdvert);
 
 advertRouter.delete('/adverts/:id', isAuthenticated, deleteAdvert);
