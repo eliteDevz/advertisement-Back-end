@@ -37,48 +37,35 @@ export const registerVendor = async (req, res) => {
 };
 
 export const loginVendor = async (req, res) => {
-    const { error, value } = loginVendorValidator.validate(req.body);
-    if (error) {
-        return res.status(422).json({ errors: error.details });
-    }
-
-
     try {
-        let vendor = await Vendor.findOne({ email: value.email });
-
-        if (!vendor) {
-            return res.status(404).json({ msg: "Vendor does not exist" });
+        // validate user input
+        const {error, value} = loginVendorValidator.validate(req.body);
+        if (error) {
+            return res.status(422).json(error);
         }
-
-        const correctPassword = bcrypt.compareSync(password, vendor.password);
-
+        // find one user with identifier
+        const user = await Vendor.findOne({email: value.email});
+        if (!user) {
+            return res.status(404).json('User does not exist!');
+        }
+        // compare their passwords
+        const correctPassword = bcrypt.compareSync(value.password, user.password);
         if (!correctPassword) {
-            return res.status(401).json({ msg: "Invalid credentials" });
+            return res.status(401).json('Invalid credentials');
         }
-
+        // sign a token for user
         const token = jwt.sign(
-            { id: vendor.id },
-            process.env.JWT_SECRET_KEY,
-            { expiresIn: '24h' }
+            {id:user.id},
+            process.env.JWT_PRIVATE_KEY,
+            {expiresIn: '30h'}
         );
-
+        // respond to request
         res.json({
-            message: 'Vendor logged in',
+            message:'User logged in!',
             accessToken: token
         });
-    } catch (err) {
-        console.error(err.message);
-        res.status(500).send('Server error');
-    }
-};
-
-export const getProfile = async (req, res) => {
-    try {
-        const vendor = await Vendor.findById(req.vendor.id).select('-password');
-        res.json(vendor);
-    } catch (err) {
-        console.error(err.message);
-        res.status(500).send('Server error');
+    } catch (error) {
+        next(error)
     }
 };
 
@@ -98,6 +85,17 @@ export const getAllVendors = async (req, res, next) => {
     }
 }
 
+
+export const getProfile = async (req, res, next) => {
+    try {
+        // find authenticated user from database
+        const user = await Vendor.findById(req.auth.id).select({password: false});
+        // respond to request
+        res.json(user);
+    } catch (error) {
+        next(error);
+    }
+}
 
 export const updateProfile = async (req, res) => {
     const { error, value } = updateProfileValidator.validate({
