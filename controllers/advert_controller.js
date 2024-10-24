@@ -8,7 +8,7 @@ export const addAdvert = async (req, res, next) => {
         // Validate vender input
         const { error, value } = addAdsValidator.validate({
             ...req.body,
-            icon: req.file?.filename
+            image: req.file?.filename
         });
         
         // Write vendor Ads to database
