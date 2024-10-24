@@ -10,13 +10,11 @@ export const addAdvert = async (req, res, next) => {
             ...req.body,
             icon: req.file?.filename
         });
-        if (error) {
-            return res.status(422).json('error');
-        }
+        
         // Write vendor Ads to database
         const advert = await AdvertModel.create({
             ...value,
-            user: req.auth.id
+            vendor: req.auth.id
         });
         //Respond to request
         return res.status(201).json('Ads was added');
