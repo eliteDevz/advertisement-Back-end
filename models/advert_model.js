@@ -14,6 +14,6 @@ const advertSchema = new Schema({
 
 advertSchema.index({ category: 'text', title: 'text' });
 
-advertSchema.plugin(toJSON)
+advertSchema.plugin(toJSON);
 
 export const AdvertModel = model('Advert', advertSchema);

@@ -26,6 +26,7 @@ export const addAdvert = async (req, res, next) => {
     }
 };
 
+
 export const countAdverts = async (req, res, next) => {
     try {
         const { filter = "{}" } = req.query;
@@ -37,6 +38,7 @@ export const countAdverts = async (req, res, next) => {
         next(error);
     }
 }
+
 
 export const getAdvertById = async (req, res, next) => {
     try {
@@ -51,6 +53,7 @@ export const getAdvertById = async (req, res, next) => {
         next(error);
     }
 };
+
 
 export const getAllAdvert = async (req, res, next) => {
     try {
@@ -97,7 +100,12 @@ export const updateAdvert = async (req, res, next) => {
 export const deleteAdvert = async (req, res, next) => {
     try {
         //Delete the as by ID from the database
-        const advert = await AdvertModel.findByIdAndDelete(req.params.id);
+        const advert = await AdvertModel.findOneAndDelete(
+        {
+            _id: req.params.id,
+            user: req.auth.id
+        }
+    );
         if (!advert) {
             return res.status(404).json('Ad not found');
         }

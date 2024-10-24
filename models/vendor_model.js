@@ -15,6 +15,6 @@ const vendorSchema = new Schema({
 
 vendorSchema.index({ name: 'text' });
 
-vendorSchema.plugin(toJSON)
+vendorSchema.plugin(toJSON);
 
 export const Vendor = model('Vendor', vendorSchema);

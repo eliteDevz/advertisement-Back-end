@@ -2,6 +2,8 @@ import { Vendor } from '../models/vendor_model.js';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { registerVendorValidator, loginVendorValidator, updateProfileValidator } from '../validators/vendor_validator.js';
+import { AdvertModel } from '../models/advert_model.js';
+
 
 export const registerVendor = async (req, res) => {
     const { error, value } = registerVendorValidator.validate(req.body);
@@ -35,6 +37,7 @@ export const registerVendor = async (req, res) => {
         res.status(500).send('Server error');
     }
 };
+
 
 export const loginVendor = async (req, res) => {
     try {
@@ -96,6 +99,27 @@ export const getProfile = async (req, res, next) => {
         next(error);
     }
 }
+
+
+export const getVendorAdverts = async (req, res, next) => {
+    try {
+        const { filter = "{}", sort = "{}", limit = 10, skip = 0 } = req.query;
+        //Fetch Vendor Ads from database
+        const ads = await AdvertModel
+            .find({
+                ...JSON.parse(filter),
+                vendor: req.auth.id
+            })
+            .sort(JSON.parse(sort))
+            .limit(limit)
+            .skip(skip);
+        //Return response
+        return res.status(200).json(ads);
+    } catch (error) {
+        next(error);
+    }
+}
+
 
 export const updateProfile = async (req, res) => {
     const { error, value } = updateProfileValidator.validate({
