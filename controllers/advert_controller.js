@@ -98,7 +98,7 @@ export const updateAdvert = async (req, res, next) => {
 export const deleteAdvert = async (req, res, next) => {
     try {
         //Delete the as by ID from the database
-        const advert = await AdvertModel.findOneAndDelete(
+        const advert = await AdvertModel.findByIdAndDelete(
         {
             _id: req.params.id,
             user: req.auth.id
