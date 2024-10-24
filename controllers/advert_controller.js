@@ -77,7 +77,7 @@ export const updateAdvert = async (req, res, next) => {
             return res.status(422).json(error);
         }
         // Write vendor Ads to database
-        const advert = await AdvertModel.findOneAndUpdate(
+        const advert = await AdvertModel.findByIdAndUpdate(
             {
                 _id: req.params.id,
                 user: req.auth.id
